@@ -1,1 +1,3 @@
+Atlas/idle.atlas
+Atlas/idle.png
 libgdx.png

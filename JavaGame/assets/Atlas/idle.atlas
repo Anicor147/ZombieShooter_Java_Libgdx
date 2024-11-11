@@ -1,0 +1,47 @@
+idle.png
+size: 24, 116
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Archer-Idle
+  rotate: false
+  xy: 1, 1
+  size: 22, 17
+  orig: 22, 17
+  offset: 0, 0
+  index: -1
+Archer-Idle
+  rotate: false
+  xy: 1, 20
+  size: 22, 17
+  orig: 22, 17
+  offset: 0, 0
+  index: -1
+Archer-Idle
+  rotate: false
+  xy: 1, 77
+  size: 22, 18
+  orig: 22, 18
+  offset: 0, 0
+  index: -1
+Archer-Idle
+  rotate: false
+  xy: 1, 97
+  size: 22, 18
+  orig: 22, 18
+  offset: 0, 0
+  index: -1
+Archer-Idle
+  rotate: false
+  xy: 1, 39
+  size: 22, 17
+  orig: 22, 17
+  offset: 0, 0
+  index: -1
+Archer-Idle
+  rotate: false
+  xy: 1, 58
+  size: 22, 17
+  orig: 22, 17
+  offset: 0, 0
+  index: -1
