@@ -2,12 +2,15 @@ package io.github.some_example_name;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import java.io.Console;
 
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
@@ -21,6 +24,8 @@ public class Main extends ApplicationAdapter {
     private TextureRegion textureRegion;
     private float stateTime;
     private FitViewport viewport;
+    private boolean isPaused = false;
+
 
     @Override
     public void create() {
@@ -45,13 +50,24 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+        input();
+
         viewport.apply();
         stateTime += Gdx.graphics.getDeltaTime();
+        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         TextureRegion currentFrame = animation.getKeyFrame(stateTime);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
+        if (!isPaused){
+            //Mettre la logic et les draw ici
+            draw(currentFrame);
+        }
+        batch.end();
+
+    }
+
+    private void draw(TextureRegion currentFrame){
         batch.draw(currentFrame,
                 Gdx.graphics.getWidth() / 2 - currentFrame.getRegionWidth() / 2,
                 Gdx.graphics.getHeight() / 2 - currentFrame.getRegionHeight() / 2,
@@ -59,8 +75,13 @@ public class Main extends ApplicationAdapter {
                 currentFrame.getRegionHeight() * 10f  // Scale height by 10x
         );
         batch.draw(currentFrame,0,1,0.5f,0.5f);
-        batch.end();
     }
 
+    private void input(){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
+
+            isPaused = !isPaused;
+        }
+    }
 
 }
