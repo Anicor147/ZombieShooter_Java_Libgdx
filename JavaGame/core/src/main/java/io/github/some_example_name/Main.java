@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
@@ -19,9 +20,11 @@ public class Main extends ApplicationAdapter {
     private Animation<TextureRegion> animation;
     private TextureRegion textureRegion;
     private float stateTime;
+    private FitViewport viewport;
 
     @Override
     public void create() {
+        viewport = new FitViewport(8,5);
         batch = new SpriteBatch();
         atlas = new TextureAtlas(Gdx.files.internal("Atlas/idle.atlas"));
 
@@ -36,11 +39,18 @@ public class Main extends ApplicationAdapter {
     }
 
     @Override
+    public void resize(int width, int height) {
+        viewport.update(width,height,true);
+    }
+
+    @Override
     public void render() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+        viewport.apply();
         stateTime += Gdx.graphics.getDeltaTime();
         TextureRegion currentFrame = animation.getKeyFrame(stateTime);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
         batch.draw(currentFrame,
                 Gdx.graphics.getWidth() / 2 - currentFrame.getRegionWidth() / 2,
@@ -48,13 +58,9 @@ public class Main extends ApplicationAdapter {
                 currentFrame.getRegionWidth() * 10f,  // Scale width by 10x
                 currentFrame.getRegionHeight() * 10f  // Scale height by 10x
         );
+        batch.draw(currentFrame,0,1,0.5f,0.5f);
         batch.end();
     }
 
-    @Override
-    public void dispose() {
-        batch.dispose();
-        atlas.dispose();
-        image.dispose();
-    }
+
 }
