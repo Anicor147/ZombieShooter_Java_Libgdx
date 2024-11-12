@@ -1,4 +1,6 @@
 Arrow.png
 Atlas/idle.atlas
 Atlas/idle.png
+Atlas/sWalk.atlas
+Atlas/skeleton_walk.png
 libgdx.png

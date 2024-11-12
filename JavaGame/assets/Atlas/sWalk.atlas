@@ -1,0 +1,61 @@
+skeleton_walk.png
+size: 28, 134
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Skeleton-Walk
+  rotate: false
+  xy: 1, 1
+  size: 26, 15
+  orig: 26, 15
+  offset: 0, 0
+  index: -1
+Skeleton-Walk
+  rotate: false
+  xy: 1, 101
+  size: 25, 15
+  orig: 25, 15
+  offset: 0, 0
+  index: -1
+Skeleton-Walk
+  rotate: false
+  xy: 1, 118
+  size: 25, 15
+  orig: 25, 15
+  offset: 0, 0
+  index: -1
+Skeleton-Walk
+  rotate: false
+  xy: 1, 69
+  size: 26, 14
+  orig: 26, 14
+  offset: 0, 0
+  index: -1
+Skeleton-Walk
+  rotate: false
+  xy: 1, 18
+  size: 26, 15
+  orig: 26, 15
+  offset: 0, 0
+  index: -1
+Skeleton-Walk
+  rotate: false
+  xy: 1, 35
+  size: 26, 15
+  orig: 26, 15
+  offset: 0, 0
+  index: -1
+Skeleton-Walk
+  rotate: false
+  xy: 1, 52
+  size: 26, 15
+  orig: 26, 15
+  offset: 0, 0
+  index: -1
+Skeleton-Walk
+  rotate: false
+  xy: 1, 85
+  size: 26, 14
+  orig: 26, 14
+  offset: 0, 0
+  index: -1
