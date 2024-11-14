@@ -81,27 +81,30 @@ public class Main extends ApplicationAdapter {
             //Mettre la logic et les draw ici
             input();
             draw();
-
         }
-
     }
 
-    private void drawSkeleton() {
-            Random random = new Random();
-            int rand = random.nextInt(0, 5);
-            batch.draw(theSkeleton, 7, rand, 0.5f, 0.5f);
+    private void drawSkeleton(TextureRegion currentSkeletonFrame) {
+           /* Random random = new Random();
+            int rand = random.nextInt(0, 5);*/
+            batch.draw(currentSkeletonFrame, 7, 0, 0.5f, 0.5f);
     }
 
     private void draw() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+        //Passe au travers de l'animation du skelette avec stateTime
+        stateTime += Gdx.graphics.getDeltaTime();
+        TextureRegion currentSkeletonFrame = skeletonAnimation.getKeyFrame(stateTime);
+        TextureRegion currentPlayerFrame = playerAnimation.getKeyFrame(stateTime);
+        thePlayer.setRegion(currentPlayerFrame);
+        //
         viewport.apply();
         batch.setProjectionMatrix(viewport.getCamera().combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
         batch.begin();
         thePlayer.draw(batch);
-        drawSkeleton();
+        drawSkeleton(currentSkeletonFrame);
         batch.end();
     }
 
