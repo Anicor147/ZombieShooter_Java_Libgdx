@@ -20,12 +20,14 @@ public class Main extends ApplicationAdapter {
     private Sprite idle;
     private TextureAtlas atlas;
     private TextureAtlas skeletonAtlas;
+    private TextureRegion theSkeleton;
     private Animation<TextureRegion> playerAnimation;
     private Animation<TextureRegion> skeletonAnimation;
     private float stateTime;
     private FitViewport viewport;
     private boolean isPaused = false;
     private int timer;
+    private Sprite thePlayer;
 
 
     @Override
@@ -39,9 +41,16 @@ public class Main extends ApplicationAdapter {
         playerAnimation = new Animation<>(0.1f, idleFrames);
         playerAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        idle = new Sprite(idleFrames.first());
+        stateTime += Gdx.graphics.getDeltaTime();
+        TextureRegion currentFrame = playerAnimation.getKeyFrame(stateTime);
+        thePlayer = new Sprite(currentFrame);
+        thePlayer.setSize(0.6f,0.6f);
+
+
+        //idle = new Sprite(idleFrames.first());
 
         createSkeleton();
+        theSkeleton = skeletonAnimation.getKeyFrame(stateTime);
     }
 
     private void createSkeleton() {
@@ -67,45 +76,48 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-        input();
 
-        viewport.apply();
-        stateTime += Gdx.graphics.getDeltaTime();
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        TextureRegion currentFrame = playerAnimation.getKeyFrame(stateTime);
-        TextureRegion currentSkeletonFrame = skeletonAnimation.getKeyFrame(stateTime);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.setProjectionMatrix(viewport.getCamera().combined);
-        batch.begin();
         if (!isPaused) {
             //Mettre la logic et les draw ici
-            draw(currentFrame);
-            drawSkeleton(currentSkeletonFrame);
+            input();
+            draw();
+
         }
-        batch.end();
 
     }
 
-    private void drawSkeleton(TextureRegion currentFrame) {
+    private void drawSkeleton() {
             Random random = new Random();
             int rand = random.nextInt(0, 5);
-            batch.draw(currentFrame, 7, rand, 0.5f, 0.5f);
+            batch.draw(theSkeleton, 7, rand, 0.5f, 0.5f);
     }
 
-    private void draw(TextureRegion currentFrame) {
-     /*   batch.draw(currentFrame,
-                Gdx.graphics.getWidth() / 2 - currentFrame.getRegionWidth() / 2,
-                Gdx.graphics.getHeight() / 2 - currentFrame.getRegionHeight() / 2,
-                currentFrame.getRegionWidth() * 10f,  // Scale width by 10x
-                currentFrame.getRegionHeight() * 10f  // Scale height by 10x
-        );*/
-        batch.draw(currentFrame, 0, 1, 0.5f, 0.5f);
+    private void draw() {
+        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+        viewport.apply();
+        batch.setProjectionMatrix(viewport.getCamera().combined);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+
+        batch.begin();
+        thePlayer.draw(batch);
+        drawSkeleton();
+        batch.end();
     }
 
     private void input() {
+        float speed = 2f;
+        float deltaTime = Gdx.graphics.getDeltaTime();
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 
             isPaused = !isPaused;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.W)){
+
+            thePlayer.translateY(speed * deltaTime);
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.S)){
+            thePlayer.translateY(-speed * deltaTime);
         }
     }
 
