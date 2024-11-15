@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -28,6 +29,7 @@ public class Main extends ApplicationAdapter {
     private boolean isPaused = false;
     private int timer;
     private Sprite thePlayer;
+    private float playerY;
 
 
     @Override
@@ -83,7 +85,6 @@ public class Main extends ApplicationAdapter {
         }
         if (!isPaused) {
             //Mettre la logic et les draw ici
-            input();
             draw();
         }
     }
@@ -110,20 +111,28 @@ public class Main extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
+        input();
         thePlayer.draw(batch);
         drawSkeleton(currentSkeletonFrame , stateTime);
         batch.end();
     }
 
     private void input() {
-        float speed = 2f;
-        float deltaTime = Gdx.graphics.getDeltaTime();
-        if (Gdx.input.isKeyPressed(Input.Keys.W)){
 
-            thePlayer.translateY(speed * deltaTime);
+        float positionY = 0;
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)){
+
+            positionY += 1;
+            thePlayer .translateY(positionY);
+            playerY = positionY;
+
         }
-        else if (Gdx.input.isKeyPressed(Input.Keys.S)){
-            thePlayer.translateY(-speed * deltaTime);
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.S)){
+            positionY -= 1;
+            thePlayer.translateY(positionY);
+            playerY = positionY;
+
         }
     }
 
