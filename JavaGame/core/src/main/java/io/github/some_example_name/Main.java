@@ -88,10 +88,13 @@ public class Main extends ApplicationAdapter {
         }
     }
 
-    private void drawSkeleton(TextureRegion currentSkeletonFrame) {
+    private void drawSkeleton(TextureRegion currentSkeletonFrame , float deltaTime) {
            /* Random random = new Random();
             int rand = random.nextInt(0, 5);*/
-            batch.draw(currentSkeletonFrame, 7, 0, 0.5f, 0.5f);
+            int positionX = 7;
+            positionX -= (int) (1 * deltaTime);
+            if (positionX < 0) positionX = 0;
+            batch.draw(currentSkeletonFrame, positionX, 0, 0.5f, 0.5f);
     }
 
     private void draw() {
@@ -108,7 +111,7 @@ public class Main extends ApplicationAdapter {
 
         batch.begin();
         thePlayer.draw(batch);
-        drawSkeleton(currentSkeletonFrame);
+        drawSkeleton(currentSkeletonFrame , stateTime);
         batch.end();
     }
 
