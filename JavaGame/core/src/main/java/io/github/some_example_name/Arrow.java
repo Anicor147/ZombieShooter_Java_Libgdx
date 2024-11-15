@@ -10,10 +10,11 @@ public class Arrow {
     private float speed;
     //private float positionY;
 
-    public Arrow(){
+    public Arrow(float arrowSpeed){
         arrowTexture = new Texture("Arrow.png");
         arrowSprite = new Sprite(arrowTexture);
         arrowSprite.setSize(0.5f,0.5f);
+        speed = arrowSpeed;
 
     }
 
@@ -23,5 +24,8 @@ public class Arrow {
     }
     public void setPositionY(float y){
         arrowSprite.setPosition(0,y);
+    }
+    public void UpdatePositionX(){
+        arrowSprite.translateX(speed);
     }
 }

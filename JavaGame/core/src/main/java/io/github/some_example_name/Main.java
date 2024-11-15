@@ -118,6 +118,7 @@ public class Main extends ApplicationAdapter {
         input();
         for (Arrow arrow : arrows){
            arrow.getArrowSprite().draw(batch);
+           arrow.UpdatePositionX();
 
         }
         thePlayer.draw(batch);
@@ -126,7 +127,7 @@ public class Main extends ApplicationAdapter {
     }
 
     private void input() {
-       // var deltaTime = Gdx.graphics.getDeltaTime();
+        var deltaTime = Gdx.graphics.getDeltaTime();
         float positionY = 0;
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)){
@@ -143,7 +144,7 @@ public class Main extends ApplicationAdapter {
 
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-            var Arrow = new Arrow();
+            var Arrow = new Arrow(2f * deltaTime);
             arrows.add(Arrow);
             Arrow.setPositionY(playerY);
         }
