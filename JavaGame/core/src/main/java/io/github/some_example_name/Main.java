@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -30,6 +31,8 @@ public class Main extends ApplicationAdapter {
     private int timer;
     private Sprite thePlayer;
     private float playerY;
+    private Array<Arrow> arrows;
+
 
 
     @Override
@@ -37,6 +40,7 @@ public class Main extends ApplicationAdapter {
         viewport = new FitViewport(8, 5);
         batch = new SpriteBatch();
         atlas = new TextureAtlas(Gdx.files.internal("Atlas/idle.atlas"));
+        arrows = new Array<>();
 
         Array<TextureAtlas.AtlasRegion> idleFrames = atlas.findRegions("Archer-Idle");
 
@@ -112,27 +116,36 @@ public class Main extends ApplicationAdapter {
 
         batch.begin();
         input();
+        for (Arrow arrow : arrows){
+           arrow.getArrowSprite().draw(batch);
+
+        }
         thePlayer.draw(batch);
         drawSkeleton(currentSkeletonFrame , stateTime);
         batch.end();
     }
 
     private void input() {
-
+       // var deltaTime = Gdx.graphics.getDeltaTime();
         float positionY = 0;
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)){
 
             positionY += 1;
             thePlayer .translateY(positionY);
-            playerY = positionY;
+            playerY += positionY;
 
         }
         else if (Gdx.input.isKeyJustPressed(Input.Keys.S)){
             positionY -= 1;
             thePlayer.translateY(positionY);
-            playerY = positionY;
+            playerY += positionY;
 
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            var Arrow = new Arrow();
+            arrows.add(Arrow);
+            Arrow.setPositionY(playerY);
         }
     }
 
