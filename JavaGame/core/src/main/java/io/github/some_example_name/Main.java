@@ -77,6 +77,10 @@ public class Main extends ApplicationAdapter {
     @Override
     public void render() {
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+
+            isPaused = !isPaused;
+        }
         if (!isPaused) {
             //Mettre la logic et les draw ici
             input();
@@ -111,10 +115,6 @@ public class Main extends ApplicationAdapter {
     private void input() {
         float speed = 2f;
         float deltaTime = Gdx.graphics.getDeltaTime();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-
-            isPaused = !isPaused;
-        }
         if (Gdx.input.isKeyPressed(Input.Keys.W)){
 
             thePlayer.translateY(speed * deltaTime);
