@@ -81,9 +81,9 @@ public class Main extends ApplicationAdapter {
 
     private void drawSkeleton(float deltaTime) {
 
-        timePassed -= deltaTime ;
+        timePassed -= deltaTime;
         if (timePassed <= 0) {
-            var skeleton = new Skeleton(0.1f);
+            var skeleton = new Skeleton(0.5f);
             skeletons.add(skeleton);
             timePassed = 1000f;
         }
@@ -94,16 +94,15 @@ public class Main extends ApplicationAdapter {
                     skeletons.get(i).getPositionY(),
                     0.5f, 0.5f);
 
-                skeletons.get(i).UpdatePositionX(stateTime);
+            skeletons.get(i).UpdatePositionX();
+//                skeletons.get(i).UpdatePositionX(stateTime);
         }
-
     }
 
     private void draw() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         //Passe au travers de l'animation du skelette avec stateTime
         stateTime += Gdx.graphics.getDeltaTime();
-//        TextureRegion currentSkeletonFrame = skeletonAnimation.getKeyFrame(stateTime);
         TextureRegion currentPlayerFrame = playerAnimation.getKeyFrame(stateTime);
         thePlayer.setRegion(currentPlayerFrame);
         //
