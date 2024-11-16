@@ -3,10 +3,13 @@ package io.github.some_example_name;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -32,6 +35,9 @@ public class Main extends ApplicationAdapter {
     private Sprite thePlayer;
     private float playerY;
     private Array<Arrow> arrows;
+    private Music music;
+    private Slider musicSlider;
+    private Skin uiSKin;
 
 
 
@@ -41,6 +47,11 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         atlas = new TextureAtlas(Gdx.files.internal("Atlas/idle.atlas"));
         arrows = new Array<>();
+        uiSKin = new Skin(Gdx.files.internal("uiskin.json"));
+
+        musicSlider = new Slider(0f,1f,0.1f,false, uiSKin);
+
+
 
         Array<TextureAtlas.AtlasRegion> idleFrames = atlas.findRegions("Archer-Idle");
 
@@ -57,6 +68,10 @@ public class Main extends ApplicationAdapter {
 
         createSkeleton();
         theSkeleton = skeletonAnimation.getKeyFrame(stateTime);
+        music = Gdx.audio.newMusic(Gdx.files.internal("The Heavy - Short Change Hero.mp3"));
+        music.setLooping(true);
+        music.setVolume(.2f);
+        music.play();
     }
 
     private void createSkeleton() {
@@ -116,13 +131,21 @@ public class Main extends ApplicationAdapter {
 
         batch.begin();
         input();
-        for (Arrow arrow : arrows){
-           arrow.getArrowSprite().draw(batch);
-           arrow.UpdatePositionX();
 
+        for (int i = arrows.size-1; i>=0; i--){
+           Sprite arrowSprite = arrows.get(i).getArrowSprite();
+           float arrowWidth = arrowSprite.getWidth();
+           arrows.get(i).getArrowSprite().draw(batch);
+           arrows.get(i).UpdatePositionX();
+           //Set Rectangle pour hitbox
+
+
+           if (arrowSprite.getY() < -arrowWidth) arrows.removeIndex(i);
         }
+
         thePlayer.draw(batch);
         drawSkeleton(currentSkeletonFrame , stateTime);
+        musicSlider.draw(batch,1);
         batch.end();
     }
 

@@ -4,10 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
+import java.awt.*;
+
 public class Arrow {
     private Texture arrowTexture;
     private Sprite arrowSprite;
     private float speed;
+    private Rectangle arrowRectangle;
     //private float positionY;
 
     public Arrow(float arrowSpeed){
@@ -15,6 +18,7 @@ public class Arrow {
         arrowSprite = new Sprite(arrowTexture);
         arrowSprite.setSize(0.5f,0.5f);
         speed = arrowSpeed;
+
 
     }
 
@@ -27,5 +31,9 @@ public class Arrow {
     }
     public void UpdatePositionX(){
         arrowSprite.translateX(speed);
+    }
+
+    public void setArrowRectangle(Rectangle arrowRectangle) {
+        this.arrowRectangle = arrowRectangle;
     }
 }
