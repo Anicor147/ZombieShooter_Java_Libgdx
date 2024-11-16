@@ -19,9 +19,7 @@ public class Arrow {
         arrowSprite.setSize(0.5f,0.5f);
         speed = arrowSpeed;
 
-
     }
-
 
     public Sprite getArrowSprite() {
         return arrowSprite;
