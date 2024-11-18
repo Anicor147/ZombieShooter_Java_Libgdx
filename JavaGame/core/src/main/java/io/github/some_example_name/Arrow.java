@@ -3,6 +3,7 @@ package io.github.some_example_name;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.awt.*;
 
@@ -11,6 +12,7 @@ public class Arrow {
     private Sprite arrowSprite;
     private float speed;
     private Rectangle arrowRectangle;
+    private float postionY;
     //private float positionY;
 
     public Arrow(float arrowSpeed){
@@ -24,6 +26,7 @@ public class Arrow {
         return arrowSprite;
     }
     public void setPositionY(float y){
+        postionY = y;
         arrowSprite.setPosition(0,y);
     }
     public void UpdatePositionX(){
@@ -32,5 +35,13 @@ public class Arrow {
 
     public void setArrowRectangle(Rectangle arrowRectangle) {
         this.arrowRectangle = arrowRectangle;
+    }
+
+    public Rectangle getArrowRectangle() {
+        return arrowRectangle;
+    }
+
+    public float getPostionY() {
+        return postionY;
     }
 }

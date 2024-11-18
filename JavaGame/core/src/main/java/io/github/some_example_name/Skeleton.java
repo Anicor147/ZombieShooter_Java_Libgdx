@@ -3,7 +3,9 @@ package io.github.some_example_name;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.Rectangle;
 
+import java.awt.*;
 import java.util.Random;
 
 public class Skeleton {
@@ -13,6 +15,7 @@ public class Skeleton {
     private Sprite skeletonSprite;
     private Animation<TextureRegion> skeletonAnimation;
     private float speed;
+    private Rectangle skeletonRectangle;
 
     private float positionX = 7;
     private int positionY;
@@ -30,6 +33,7 @@ public class Skeleton {
         }
         skeletonAnimation = new Animation<>(0.1f, walkFrames);
         skeletonSprite = new Sprite(skeletonAnimation.getKeyFrame(0));
+        skeletonSprite.setSize(0.5f,0.5f);
 
         this.speed = speed;
         this.positionY = getRandomPositionY();
@@ -61,4 +65,13 @@ public class Skeleton {
     public int getPositionY() {
         return positionY;
     }
+
+    public Rectangle getSkeletonRectangle() {
+        return skeletonRectangle;
+    }
+
+    public void setSkeletonRectangle(Rectangle skeletonRectangle) {
+        this.skeletonRectangle = skeletonRectangle;
+    }
+
 }

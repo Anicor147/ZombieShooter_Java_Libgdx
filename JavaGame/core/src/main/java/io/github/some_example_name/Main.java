@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.math.Rectangle;
+
+import java.awt.*;
 
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
@@ -58,8 +61,10 @@ public class Main extends ApplicationAdapter {
         //idle = new Sprite(idleFrames.first());
         music = Gdx.audio.newMusic(Gdx.files.internal("The Heavy - Short Change Hero.mp3"));
         music.setLooping(true);
-        music.setVolume(.2f);
+        music.setVolume(.1f);
         music.play();
+
+
     }
 
     @Override
@@ -75,6 +80,7 @@ public class Main extends ApplicationAdapter {
         }
         if (!isPaused) {
             //Mettre la logic et les draw ici
+            logic();
             draw();
         }
     }
@@ -85,7 +91,7 @@ public class Main extends ApplicationAdapter {
         if (timePassed <= 0) {
             var skeleton = new Skeleton(0.5f);
             skeletons.add(skeleton);
-            timePassed = 1000f;
+            timePassed = 10000f;
         }
 
         for (int i = 0; i < skeletons.size; i++) {
@@ -95,7 +101,11 @@ public class Main extends ApplicationAdapter {
                     0.5f, 0.5f);
 
             skeletons.get(i).UpdatePositionX();
-//                skeletons.get(i).UpdatePositionX(stateTime);
+            var skelRectangle = new Rectangle();
+            skelRectangle.setSize(skeletons.get(i).getSprite().getWidth(), skeletons.get(i).getSprite().getHeight());
+            skelRectangle.setPosition(skeletons.get(i).getSprite().getX(), skeletons.get(i).getPositionY());
+            skeletons.get(i).setSkeletonRectangle(skelRectangle);
+
         }
     }
 
@@ -113,15 +123,9 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         input();
 
-        for (int i = arrows.size - 1; i >= 0; i--) {
-            Sprite arrowSprite = arrows.get(i).getArrowSprite();
-            float arrowWidth = arrowSprite.getWidth();
+        for (int i = 0; i < arrows.size; i++) {
             arrows.get(i).getArrowSprite().draw(batch);
             arrows.get(i).UpdatePositionX();
-            //Set Rectangle pour hitbox
-
-
-            if (arrowSprite.getY() < -arrowWidth) arrows.removeIndex(i);
         }
 
         thePlayer.draw(batch);
@@ -150,6 +154,43 @@ public class Main extends ApplicationAdapter {
             var Arrow = new Arrow(2f * deltaTime);
             arrows.add(Arrow);
             Arrow.setPositionY(playerY);
+        }
+    }
+
+    private void logic() {
+
+
+        for (int i = 0; i < arrows.size; i++) {
+
+            var arrowRectangle = new Rectangle();
+            arrowRectangle.setSize(arrows.get(i).getArrowSprite().getWidth(), arrows.get(i).getArrowSprite().getHeight());
+            arrowRectangle.setPosition(arrows.get(i).getArrowSprite().getX(), arrows.get(i).getArrowSprite().getY());
+            arrows.get(i).setArrowRectangle(arrowRectangle);
+            //System.out.println(i);
+
+
+            if (!skeletons.isEmpty() && !arrows.isEmpty()) {
+                for (Array.ArrayIterator<Skeleton> iterator = skeletons.iterator(); iterator.hasNext(); ) {
+                    Skeleton ennemies = iterator.next();
+                    try {
+                        if (arrows.get(i).getArrowRectangle().overlaps(ennemies.getSkeletonRectangle())) {
+                            iterator.remove();
+                            System.out.println("Kill");
+                            arrows.removeIndex(i);
+                            break;
+                        }
+
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+            }
+            if (!arrows.isEmpty() && arrows.get(i).getArrowSprite().getX() > 8) {
+                    arrows.removeIndex(i);
+                    System.out.println("Arrow remove");
+            }
+
         }
     }
 
