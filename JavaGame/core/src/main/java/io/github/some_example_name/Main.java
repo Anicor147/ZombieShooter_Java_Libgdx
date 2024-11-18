@@ -13,8 +13,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.math.Rectangle;
 
-import java.awt.*;
-
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
  */
@@ -159,24 +157,23 @@ public class Main extends ApplicationAdapter {
 
     private void logic() {
 
-
-        for (int i = 0; i < arrows.size; i++) {
+        for (Array.ArrayIterator<Arrow> arrowIter = arrows.iterator(); arrowIter.hasNext(); ) {
+            Arrow arrow = arrowIter.next();
 
             var arrowRectangle = new Rectangle();
-            arrowRectangle.setSize(arrows.get(i).getArrowSprite().getWidth(), arrows.get(i).getArrowSprite().getHeight());
-            arrowRectangle.setPosition(arrows.get(i).getArrowSprite().getX(), arrows.get(i).getArrowSprite().getY());
-            arrows.get(i).setArrowRectangle(arrowRectangle);
-            //System.out.println(i);
+            arrowRectangle.setSize(arrow.getArrowSprite().getWidth(), arrow.getArrowSprite().getHeight());
+            arrowRectangle.setPosition(arrow.getArrowSprite().getX(), arrow.getArrowSprite().getY());
+            arrow.setArrowRectangle(arrowRectangle);
 
 
             if (!skeletons.isEmpty() && !arrows.isEmpty()) {
                 for (Array.ArrayIterator<Skeleton> iterator = skeletons.iterator(); iterator.hasNext(); ) {
                     Skeleton ennemies = iterator.next();
                     try {
-                        if (arrows.get(i).getArrowRectangle().overlaps(ennemies.getSkeletonRectangle())) {
+                        if (arrow.getArrowRectangle().overlaps(ennemies.getSkeletonRectangle())) {
                             iterator.remove();
                             System.out.println("Kill");
-                            arrows.removeIndex(i);
+                            arrowIter.remove();
                             break;
                         }
 
@@ -186,12 +183,14 @@ public class Main extends ApplicationAdapter {
                 }
 
             }
-            if (!arrows.isEmpty() && arrows.get(i).getArrowSprite().getX() > 8) {
-                    arrows.removeIndex(i);
-                    System.out.println("Arrow remove");
+            if (!arrows.isEmpty() && arrow.getArrowSprite().getX() > 8) {
+                arrowIter.remove();
+                System.out.println("Arrow remove");
             }
 
         }
-    }
+        }
+
+
 
 }
