@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
@@ -33,11 +34,19 @@ public class Main extends ApplicationAdapter {
     private Skin uiSKin;
 
     private Array<Skeleton> skeletons;
+    private int playerScore;
+    BitmapFont bitmapFont;
 
+
+    ////////////////////////
+    //ui
+    OrthographicCamera uiCamera;
 
     @Override
     public void create() {
-        viewport = new FitViewport(8, 5);
+        uiCamera = new OrthographicCamera();
+        uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() ) ;
+        viewport = new FitViewport(8, 6);
         batch = new SpriteBatch();
         atlas = new TextureAtlas(Gdx.files.internal("Atlas/idle.atlas"));
         arrows = new Array<>();
@@ -62,6 +71,8 @@ public class Main extends ApplicationAdapter {
         music.setVolume(.1f);
         music.play();
 
+        playerScore =0;
+        bitmapFont = new BitmapFont();
 
     }
 
@@ -80,6 +91,8 @@ public class Main extends ApplicationAdapter {
             //Mettre la logic et les draw ici
             logic();
             draw();
+
+
         }
     }
 
@@ -128,8 +141,19 @@ public class Main extends ApplicationAdapter {
 
         thePlayer.draw(batch);
         drawSkeleton(stateTime);
-//        musicSlider.draw(batch,1);
+
+
         batch.end();
+        batch.setProjectionMatrix(uiCamera.combined);
+        batch.begin();
+        bitmapFont.setColor(1.0f,1.0f,1.0f,1.0f);
+        String x = "score: " + playerScore;
+        bitmapFont.getData().setScale(1f);
+        bitmapFont.draw(batch, x, 300, 440);
+
+        musicSlider.draw(batch,1);
+        batch.end();
+
     }
 
     private void input() {
@@ -171,6 +195,7 @@ public class Main extends ApplicationAdapter {
                     Skeleton ennemies = iterator.next();
                     try {
                         if (arrow.getArrowRectangle().overlaps(ennemies.getSkeletonRectangle())) {
+                            playerScore += ennemies.getScore();
                             iterator.remove();
                             System.out.println("Kill");
                             arrowIter.remove();

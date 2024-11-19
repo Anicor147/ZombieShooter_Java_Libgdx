@@ -22,6 +22,7 @@ public class Skeleton {
     private float timeInPlace;
     Random random = new Random();
     int rand;
+    private int score;
 
     public Skeleton(float speed) {
         skeletonBatch = new SpriteBatch();
@@ -38,8 +39,12 @@ public class Skeleton {
         this.speed = speed;
         this.positionY = getRandomPositionY();
         this.timeInPlace = 0f;
+        this.score = 1;
     }
 
+    public int getScore (){
+        return score;
+    }
     public Sprite getSprite() {
         return skeletonSprite;
     }
