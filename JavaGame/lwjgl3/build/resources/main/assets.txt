@@ -4,6 +4,7 @@ Atlas/idle.png
 Atlas/sWalk.atlas
 Atlas/skeleton_walk.png
 The Heavy - Short Change Hero.mp3
+bg.png
 default.fnt
 default.png
 libgdx.png

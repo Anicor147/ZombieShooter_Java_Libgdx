@@ -6,9 +6,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -33,9 +37,11 @@ public class Main extends ApplicationAdapter {
     private Slider musicSlider;
     private Skin uiSKin;
 
+
     private Array<Skeleton> skeletons;
     private int playerScore;
     BitmapFont bitmapFont;
+    private Texture bgTexture;
 
 
     ////////////////////////
@@ -44,16 +50,22 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void create() {
+        bgTexture = new Texture("bg.png");
         uiCamera = new OrthographicCamera();
         uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() ) ;
         viewport = new FitViewport(8, 6);
+
         batch = new SpriteBatch();
         atlas = new TextureAtlas(Gdx.files.internal("Atlas/idle.atlas"));
         arrows = new Array<>();
         skeletons = new Array<>();
         uiSKin = new Skin(Gdx.files.internal("uiskin.json"));
 
+
         musicSlider = new Slider(0f, 1f, 0.1f, false, uiSKin);
+        musicSlider.setPosition(500,440);
+
+
 
 
         Array<TextureAtlas.AtlasRegion> idleFrames = atlas.findRegions("Archer-Idle");
@@ -133,6 +145,7 @@ public class Main extends ApplicationAdapter {
 
         batch.begin();
         input();
+        batch.draw(bgTexture,0,0,viewport.getWorldWidth(),viewport.getWorldHeight());
 
         for (int i = 0; i < arrows.size; i++) {
             arrows.get(i).getArrowSprite().draw(batch);
@@ -152,6 +165,8 @@ public class Main extends ApplicationAdapter {
         bitmapFont.draw(batch, x, 300, 440);
 
         musicSlider.draw(batch,1);
+
+
         batch.end();
 
     }
@@ -159,18 +174,21 @@ public class Main extends ApplicationAdapter {
     private void input() {
         var deltaTime = Gdx.graphics.getDeltaTime();
         float positionY = 0;
+        float maxY = 5;
+        float minY = 0;
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-
-            positionY += 1;
-            thePlayer.translateY(positionY);
-            playerY += positionY;
-
+            if (playerY < maxY) {
+                positionY += 1;
+                thePlayer.translateY(positionY);
+                playerY += positionY;
+            }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            positionY -= 1;
-            thePlayer.translateY(positionY);
-            playerY += positionY;
-
+            if (playerY > minY) {
+                positionY -= 1;
+                thePlayer.translateY(positionY);
+                playerY += positionY;
+            }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             var Arrow = new Arrow(2f * deltaTime);
