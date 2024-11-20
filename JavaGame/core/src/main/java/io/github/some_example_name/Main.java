@@ -3,6 +3,7 @@ package io.github.some_example_name;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -21,7 +22,7 @@ import com.badlogic.gdx.math.Rectangle;
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
  */
-public class Main extends ApplicationAdapter {
+public class Main implements Screen {
     private SpriteBatch batch;
     private Sprite idle;
     private TextureAtlas atlas;
@@ -47,8 +48,9 @@ public class Main extends ApplicationAdapter {
     ////////////////////////
     //ui
     OrthographicCamera uiCamera;
+    final TheGame game;
 
-    @Override
+  /*  @Override
     public void create() {
         bgTexture = new Texture("bg.png");
         uiCamera = new OrthographicCamera();
@@ -86,6 +88,56 @@ public class Main extends ApplicationAdapter {
         playerScore =0;
         bitmapFont = new BitmapFont();
 
+    }*/
+  public Main(final TheGame game) {
+      this.game = game;
+
+      uiCamera = new OrthographicCamera();
+      uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+      viewport = new FitViewport(8, 6);
+      batch = new SpriteBatch();
+      atlas = new TextureAtlas(Gdx.files.internal("Atlas/idle.atlas"));
+      arrows = new Array<>();
+      skeletons = new Array<>();
+      uiSKin = new Skin(Gdx.files.internal("uiskin.json"));
+
+      musicSlider = new Slider(0f, 1f, 0.1f, false, uiSKin);
+
+      Array<TextureAtlas.AtlasRegion> idleFrames = atlas.findRegions("Archer-Idle");
+
+      playerAnimation = new Animation<>(0.1f, idleFrames);
+      playerAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+      stateTime += Gdx.graphics.getDeltaTime();
+      TextureRegion currentFrame = playerAnimation.getKeyFrame(stateTime);
+      thePlayer = new Sprite(currentFrame);
+      thePlayer.setSize(0.6f, 0.6f);
+      //idle = new Sprite(idleFrames.first());
+      music = Gdx.audio.newMusic(Gdx.files.internal("The Heavy - Short Change Hero.mp3"));
+      music.setLooping(true);
+      music.setVolume(.1f);
+      music.play();
+
+      playerScore = 0;
+      bitmapFont = new BitmapFont();
+
+  }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void render(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            isPaused = !isPaused;
+        }
+        if (!isPaused) {
+            //Mettre la logic et les draw ici
+            logic();
+            draw();
+        }
     }
 
     @Override
@@ -94,18 +146,23 @@ public class Main extends ApplicationAdapter {
     }
 
     @Override
-    public void render() {
+    public void pause() {
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            isPaused = !isPaused;
-        }
-        if (!isPaused) {
-            //Mettre la logic et les draw ici
-            logic();
-            draw();
+    }
 
+    @Override
+    public void resume() {
 
-        }
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+
     }
 
     private void drawSkeleton(float deltaTime) {
