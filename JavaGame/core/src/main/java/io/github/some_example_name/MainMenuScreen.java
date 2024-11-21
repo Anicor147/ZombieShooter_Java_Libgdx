@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.awt.*;
@@ -14,12 +12,14 @@ public class MainMenuScreen implements Screen {
 
     final TheGame game;
 
+
+    TextField username;
     public MainMenuScreen(final TheGame game) {
         this.game = game;
+        username = new TextField();
 
-      }
+    }
 
-      private void Pusherrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr(){}
     @Override
     public void show() {
 
@@ -27,16 +27,18 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(Color.BLACK);
+        ScreenUtils.clear(Color.GRAY);
 
-        game.viewport.apply();
-        game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
-
+//        game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
+//        game.viewport.apply();
+        game.batch.setProjectionMatrix(game.camera.combined);
         game.batch.begin();
-        float scale = game.viewport.getWorldHeight() / Gdx.graphics.getHeight();
+        game.font.getData().setScale(1f);
         game.font.setColor(Color.BLUE);
-        game.font.draw(game.batch, "Welcome to zombieShooter!!!", 1, 3); // Adjust coordinates as needed
-        game.font.draw(game.batch, "Tap anywhere to begin!", 2, 4);
+        game.font.draw(game.batch, "Welcome to zombieShooter!!!", 220, 400); // Adjust coordinates as needed
+        game.font.draw(game.batch, "Tap anywhere to begin!", 250, 100);
+        username.setText("Enter Username here");
+        username.setLocation(100, 200);
         game.batch.end();
 
         if (Gdx.input.isTouched()) {

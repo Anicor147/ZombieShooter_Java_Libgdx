@@ -92,6 +92,7 @@ public class Main implements Screen {
   public Main(final TheGame game) {
       this.game = game;
 
+      bgTexture = new Texture("bg.png");
       uiCamera = new OrthographicCamera();
       uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
       viewport = new FitViewport(8, 6);
