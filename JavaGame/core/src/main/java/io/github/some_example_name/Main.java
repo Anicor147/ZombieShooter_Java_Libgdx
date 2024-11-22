@@ -5,12 +5,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -18,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
@@ -35,8 +38,11 @@ public class Main implements Screen {
     private float playerY;
     private Array<Arrow> arrows;
     private Music music;
+    private Sound shootingArrow;
+    private Sound skeletonDying;
     private Slider musicSlider;
     private Skin uiSKin;
+    private Label musicLabel;
 
 
     private Array<Skeleton> skeletons;
@@ -49,6 +55,7 @@ public class Main implements Screen {
     //ui
     OrthographicCamera uiCamera;
     final TheGame game;
+    private Stage pauseStage;
 
   /*  @Override
     public void create() {
@@ -100,9 +107,6 @@ public class Main implements Screen {
       atlas = new TextureAtlas(Gdx.files.internal("Atlas/idle.atlas"));
       arrows = new Array<>();
       skeletons = new Array<>();
-      uiSKin = new Skin(Gdx.files.internal("uiskin.json"));
-
-      musicSlider = new Slider(0f, 1f, 0.1f, false, uiSKin);
 
       Array<TextureAtlas.AtlasRegion> idleFrames = atlas.findRegions("Archer-Idle");
 
@@ -114,10 +118,8 @@ public class Main implements Screen {
       thePlayer = new Sprite(currentFrame);
       thePlayer.setSize(0.6f, 0.6f);
       //idle = new Sprite(idleFrames.first());
-      music = Gdx.audio.newMusic(Gdx.files.internal("The Heavy - Short Change Hero.mp3"));
-      music.setLooping(true);
-      music.setVolume(.1f);
-      music.play();
+      AudioSetUp();
+      pauseMenu();
 
       playerScore = 0;
       bitmapFont = new BitmapFont();
@@ -133,11 +135,21 @@ public class Main implements Screen {
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             isPaused = !isPaused;
+
+            if (isPaused){
+                Gdx.input.setInputProcessor(pauseStage);
+            }else {
+                Gdx.input.setInputProcessor(null);
+            }
         }
         if (!isPaused) {
             //Mettre la logic et les draw ici
             logic();
             draw();
+        }else {
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            pauseStage.act(delta);
+            pauseStage.draw();
         }
     }
 
@@ -163,6 +175,16 @@ public class Main implements Screen {
 
     @Override
     public void dispose() {
+      pauseStage.dispose();
+      batch.dispose();
+      atlas.dispose();
+      music.dispose();
+      shootingArrow.dispose();
+      skeletonDying.dispose();
+      uiSKin.dispose();
+      bitmapFont.dispose();
+      bgTexture.dispose();
+
 
     }
 
@@ -222,8 +244,6 @@ public class Main implements Screen {
         bitmapFont.getData().setScale(1f);
         bitmapFont.draw(batch, x, 300, 440);
 
-        musicSlider.draw(batch,1);
-
 
         batch.end();
 
@@ -252,6 +272,7 @@ public class Main implements Screen {
             var Arrow = new Arrow(2f * deltaTime);
             arrows.add(Arrow);
             Arrow.setPositionY(playerY);
+            shootingArrow.play();
         }
     }
 
@@ -275,6 +296,7 @@ public class Main implements Screen {
                             iterator.remove();
                             System.out.println("Kill");
                             arrowIter.remove();
+                            skeletonDying.play();
                             break;
                         }
 
@@ -290,7 +312,46 @@ public class Main implements Screen {
             }
 
         }
-        }
+   }
+   private void AudioSetUp(){
+       music = Gdx.audio.newMusic(Gdx.files.internal("The Heavy - Short Change Hero.mp3"));
+       shootingArrow = Gdx.audio.newSound(Gdx.files.internal("arrow.mp3"));
+       skeletonDying = Gdx.audio.newSound(Gdx.files.internal("skeleton.mp3"));
+       music.setLooping(true);
+       music.setVolume(.1f);
+       shootingArrow.setVolume(1,.2f);
+
+       skeletonDying.setVolume(1,.2f);
+       music.play();
+   }
+   private void pauseMenu(){
+      pauseStage = new Stage(new ScreenViewport());
+      Gdx.input.setInputProcessor(pauseStage);
+
+       uiSKin = new Skin(Gdx.files.internal("uiskin.json"));
+       musicLabel = new Label("Music Volume", uiSKin);
+       musicLabel.setPosition(200, 220);
+
+       musicSlider = new Slider(0f, 1f, 0.1f, false, uiSKin);
+
+
+       musicSlider.setPosition(200, 150);
+       musicSlider.setSize(300, 40);
+
+
+       musicSlider.addListener(new ChangeListener() {
+           @Override
+           public void changed(ChangeEvent event, Actor actor) {
+               System.out.println("Slider value: " + musicSlider.getValue());
+               music.setVolume(musicSlider.getValue());
+               shootingArrow.setVolume(1,musicSlider.getValue()+0.1f);
+
+               skeletonDying.setVolume(1,musicSlider.getValue()+0.1f);
+           }
+       });
+       pauseStage.addActor(musicLabel);
+       pauseStage.addActor(musicSlider);
+   }
 
 
 
