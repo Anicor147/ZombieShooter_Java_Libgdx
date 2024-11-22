@@ -7,15 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-
-import java.awt.*;
 
 public class MainMenuScreen implements Screen {
 
@@ -29,13 +26,13 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(final TheGame game) {
         this.game = game;
         skin = new Skin(Gdx.files.internal("uiskin.json"));
-        stage = new Stage( new FitViewport(800, 600));
+        stage = new Stage(new FitViewport(800, 600));
         usernameTF = new TextField("Enter a Username", skin);
         passwordTF = new TextField("Enter a Password", skin);
         usernameTF.setPosition(50, 100);
         usernameTF.setSize(200, 40);
-        passwordTF.setPosition(50,50 );
-        passwordTF.setSize(200,40);
+        passwordTF.setPosition(50, 50);
+        passwordTF.setSize(200, 40);
         TextButton button = new TextButton("Login", skin);
         button.setPosition(400, 75);
         button.setSize(150, 50);
@@ -61,7 +58,16 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 //manque juste la logic avec base de donnée
-                game.setScreen(new Main(game));
+
+                if (usernameTF.getText().equals("") || passwordTF.getText().equals("")) return ;
+
+                if (ConnectDB.checkUserInDatabase(usernameTF.getText(), passwordTF.getText())) {
+                    game.setScreen(new Main(game));
+                }
+                else {
+                    ConnectDB.addUserToDatabase(usernameTF.getText(), passwordTF.getText());
+                    game.setScreen(new Main(game));
+                }
             }
         });
 
