@@ -59,14 +59,13 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 //manque juste la logic avec base de donnée
 
-                if (usernameTF.getText().equals("") || passwordTF.getText().equals("")) return ;
-
-                if (ConnectDB.checkUserInDatabase(usernameTF.getText(), passwordTF.getText())) {
-                    game.setScreen(new Main(game));
-                }
-                else {
-                    ConnectDB.addUserToDatabase(usernameTF.getText(), passwordTF.getText());
-                    game.setScreen(new Main(game));
+                if (checkUsernames()) {
+                    if (ConnectDB.checkUserInDatabase(usernameTF.getText(), passwordTF.getText())) {
+                        game.setScreen(new Main(game));
+                    } else {
+                        ConnectDB.addUserToDatabase(usernameTF.getText(), passwordTF.getText());
+                        game.setScreen(new Main(game));
+                    }
                 }
             }
         });
@@ -76,6 +75,11 @@ public class MainMenuScreen implements Screen {
         stage.addActor(button);
 
         Gdx.input.setInputProcessor(stage);
+    }
+
+    private boolean checkUsernames() {
+        return (!usernameTF.getText().equals("Enter a Username") && !usernameTF.getText().isEmpty()) ||
+                (!passwordTF.getText().equals("Enter a Password") && !passwordTF.getText().isEmpty());
     }
 
     @Override

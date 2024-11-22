@@ -18,7 +18,7 @@ public class ConnectDB {
     public static boolean checkUserInDatabase(String nom, String password) {
 
         try (Connection connection = ConnectDB.connectToDB()) {
-            String sql = "SELECT id, nom FROM users WHERE nom = ? AND password = ?";
+            String sql = "SELECT id, username FROM users WHERE username = ? AND password = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setString(1, nom);
@@ -39,7 +39,7 @@ public class ConnectDB {
 
     public static void addUserToDatabase(String nom, String password ) {
         try (Connection conn = ConnectDB.connectToDB()) {
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO users (nom, password)  VALUES (?,?)");
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO users (username, password , score)  VALUES (?,?,?)");
 
             pstmt.setString(1, nom);
             pstmt.setString(2, password);
