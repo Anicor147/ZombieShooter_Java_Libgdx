@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.awt.*;
 
@@ -28,7 +29,7 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(final TheGame game) {
         this.game = game;
         skin = new Skin(Gdx.files.internal("uiskin.json"));
-        stage = new Stage();
+        stage = new Stage( new FitViewport(800, 600));
         usernameTF = new TextField("Enter a Username", skin);
         passwordTF = new TextField("Enter a Password", skin);
         usernameTF.setPosition(50, 100);
@@ -91,12 +92,12 @@ public class MainMenuScreen implements Screen {
         stage.act(delta);
         stage.draw();
 
-
     }
 
     @Override
     public void resize(int width, int height) {
 
+        stage.getViewport().update(width, height, true);
     }
 
     @Override

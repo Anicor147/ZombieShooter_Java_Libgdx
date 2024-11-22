@@ -19,7 +19,7 @@ public class TheGame extends Game {
         batch = new SpriteBatch();
         // use libGDX's default font
         font = new BitmapFont();
-        viewport = new FitViewport(16, 10);
+//        viewport = new FitViewport(16, 10);
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         //font has 15pt, but we need to scale it to our viewport by ratio of viewport height to screen height

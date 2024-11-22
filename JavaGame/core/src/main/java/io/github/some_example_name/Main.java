@@ -156,6 +156,7 @@ public class Main implements Screen {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+       pauseStage.getViewport().update(width,height, true);
     }
 
     @Override
@@ -194,7 +195,7 @@ public class Main implements Screen {
         if (timePassed <= 0) {
             var skeleton = new Skeleton(0.5f);
             skeletons.add(skeleton);
-            timePassed = 10000f;
+            timePassed = 1000f;
         }
 
         for (int i = 0; i < skeletons.size; i++) {
@@ -325,7 +326,7 @@ public class Main implements Screen {
        music.play();
    }
    private void pauseMenu(){
-      pauseStage = new Stage(new ScreenViewport());
+      pauseStage = new Stage(new FitViewport(800, 600));
       Gdx.input.setInputProcessor(pauseStage);
 
        uiSKin = new Skin(Gdx.files.internal("uiskin.json"));
