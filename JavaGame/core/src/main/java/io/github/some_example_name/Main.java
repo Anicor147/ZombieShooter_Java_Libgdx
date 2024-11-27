@@ -137,6 +137,7 @@ public class Main implements Screen {
             isPaused = !isPaused;
 
             if (isPaused){
+                ConnectDB.updateUserScoreInDatabase(playerScore);
                 Gdx.input.setInputProcessor(pauseStage);
             }else {
                 Gdx.input.setInputProcessor(null);
@@ -185,8 +186,6 @@ public class Main implements Screen {
       uiSKin.dispose();
       bitmapFont.dispose();
       bgTexture.dispose();
-
-
     }
 
     private void drawSkeleton(float deltaTime) {
@@ -275,6 +274,7 @@ public class Main implements Screen {
             Arrow.setPositionY(playerY);
             shootingArrow.play();
         }
+
     }
 
     private void logic() {
@@ -353,7 +353,8 @@ public class Main implements Screen {
        });
        pauseStage.addActor(musicLabel);
        pauseStage.addActor(musicSlider);
-   }
+
+  }
 
 
 

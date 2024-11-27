@@ -8,6 +8,8 @@ public class ConnectDB {
     private static final String user = "root";
     private static final String passwd = "";
 
+    public static String name = "";
+
     public static Connection connectToDB() throws SQLException {
         Connection connection = DriverManager.getConnection(url, user, passwd);
         System.out.println("Connection Reussie");
@@ -52,11 +54,12 @@ public class ConnectDB {
     }
 
     public static void updateUserScoreInDatabase(int newScore) {
-        String sql = "UPDATE users SET score = ?";
+        String sql = "UPDATE users set score = ? where username = ?";
         try (Connection conn = ConnectDB.connectToDB();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, newScore);
+            pstmt.setString(2, name);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {

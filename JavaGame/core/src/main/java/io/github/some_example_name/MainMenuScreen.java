@@ -62,9 +62,11 @@ public class MainMenuScreen implements Screen {
                 if (checkUsernames()) {
                     if (ConnectDB.checkUserInDatabase(usernameTF.getText(), passwordTF.getText())) {
                         game.setScreen(new Main(game));
+                        ConnectDB.name = usernameTF.getText();
                     } else {
                         ConnectDB.addUserToDatabase(usernameTF.getText(), passwordTF.getText());
                         game.setScreen(new Main(game));
+                        ConnectDB.name = usernameTF.getText();
                     }
                 }
             }
