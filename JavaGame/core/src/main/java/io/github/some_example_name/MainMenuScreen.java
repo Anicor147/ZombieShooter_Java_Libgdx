@@ -3,6 +3,7 @@ package io.github.some_example_name;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,12 +20,15 @@ public class MainMenuScreen implements Screen {
     final TheGame game;
     private Stage stage;
     private Skin skin;
+   private Texture bgTexture;
 
     TextField usernameTF;
     TextField passwordTF;
 
     public MainMenuScreen(final TheGame game) {
         this.game = game;
+
+        bgTexture = new Texture("bg.png");
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         stage = new Stage(new FitViewport(800, 600));
         usernameTF = new TextField("Enter a Username", skin);
@@ -97,13 +101,13 @@ public class MainMenuScreen implements Screen {
 //        game.viewport.apply();
         game.batch.setProjectionMatrix(game.camera.combined);
         game.batch.begin();
+        game.batch.draw(bgTexture, 0, 0, 800, 600);
         game.font.getData().setScale(1f);
-        game.font.setColor(Color.BLUE);
-        game.font.draw(game.batch, "Welcome to zombieShooter!!!", 220, 400);
+        game.font.setColor(Color.WHITE);
+        game.font.draw(game.batch, "Welcome to zombieShooter", 220, 400);
         game.batch.end();
         stage.act(delta);
         stage.draw();
-
     }
 
     @Override

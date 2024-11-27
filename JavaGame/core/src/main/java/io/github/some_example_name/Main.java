@@ -11,11 +11,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -51,31 +54,65 @@ public class Main implements Screen {
     private Texture bgTexture;
 
 
-    ////////////////////////
+    /// /////////////////////
     //ui
     OrthographicCamera uiCamera;
     final TheGame game;
     private Stage pauseStage;
 
-  /*  @Override
-    public void create() {
+    TextButton exitButton;
+    TextButton button;
+
+    /*  @Override
+      public void create() {
+          bgTexture = new Texture("bg.png");
+          uiCamera = new OrthographicCamera();
+          uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() ) ;
+          viewport = new FitViewport(8, 6);
+
+          batch = new SpriteBatch();
+          atlas = new TextureAtlas(Gdx.files.internal("Atlas/idle.atlas"));
+          arrows = new Array<>();
+          skeletons = new Array<>();
+          uiSKin = new Skin(Gdx.files.internal("uiskin.json"));
+
+
+          musicSlider = new Slider(0f, 1f, 0.1f, false, uiSKin);
+          musicSlider.setPosition(500,440);
+
+
+
+
+          Array<TextureAtlas.AtlasRegion> idleFrames = atlas.findRegions("Archer-Idle");
+
+          playerAnimation = new Animation<>(0.1f, idleFrames);
+          playerAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+          stateTime += Gdx.graphics.getDeltaTime();
+          TextureRegion currentFrame = playerAnimation.getKeyFrame(stateTime);
+          thePlayer = new Sprite(currentFrame);
+          thePlayer.setSize(0.6f, 0.6f);
+          //idle = new Sprite(idleFrames.first());
+          music = Gdx.audio.newMusic(Gdx.files.internal("The Heavy - Short Change Hero.mp3"));
+          music.setLooping(true);
+          music.setVolume(.1f);
+          music.play();
+
+          playerScore =0;
+          bitmapFont = new BitmapFont();
+
+      }*/
+    public Main(final TheGame game) {
+        this.game = game;
+
         bgTexture = new Texture("bg.png");
         uiCamera = new OrthographicCamera();
-        uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() ) ;
+        uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         viewport = new FitViewport(8, 6);
-
         batch = new SpriteBatch();
         atlas = new TextureAtlas(Gdx.files.internal("Atlas/idle.atlas"));
         arrows = new Array<>();
         skeletons = new Array<>();
-        uiSKin = new Skin(Gdx.files.internal("uiskin.json"));
-
-
-        musicSlider = new Slider(0f, 1f, 0.1f, false, uiSKin);
-        musicSlider.setPosition(500,440);
-
-
-
 
         Array<TextureAtlas.AtlasRegion> idleFrames = atlas.findRegions("Archer-Idle");
 
@@ -87,44 +124,13 @@ public class Main implements Screen {
         thePlayer = new Sprite(currentFrame);
         thePlayer.setSize(0.6f, 0.6f);
         //idle = new Sprite(idleFrames.first());
-        music = Gdx.audio.newMusic(Gdx.files.internal("The Heavy - Short Change Hero.mp3"));
-        music.setLooping(true);
-        music.setVolume(.1f);
-        music.play();
+        AudioSetUp();
+        pauseMenu();
 
-        playerScore =0;
+        playerScore = 0;
         bitmapFont = new BitmapFont();
 
-    }*/
-  public Main(final TheGame game) {
-      this.game = game;
-
-      bgTexture = new Texture("bg.png");
-      uiCamera = new OrthographicCamera();
-      uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-      viewport = new FitViewport(8, 6);
-      batch = new SpriteBatch();
-      atlas = new TextureAtlas(Gdx.files.internal("Atlas/idle.atlas"));
-      arrows = new Array<>();
-      skeletons = new Array<>();
-
-      Array<TextureAtlas.AtlasRegion> idleFrames = atlas.findRegions("Archer-Idle");
-
-      playerAnimation = new Animation<>(0.1f, idleFrames);
-      playerAnimation.setPlayMode(Animation.PlayMode.LOOP);
-
-      stateTime += Gdx.graphics.getDeltaTime();
-      TextureRegion currentFrame = playerAnimation.getKeyFrame(stateTime);
-      thePlayer = new Sprite(currentFrame);
-      thePlayer.setSize(0.6f, 0.6f);
-      //idle = new Sprite(idleFrames.first());
-      AudioSetUp();
-      pauseMenu();
-
-      playerScore = 0;
-      bitmapFont = new BitmapFont();
-
-  }
+    }
 
     @Override
     public void show() {
@@ -136,10 +142,10 @@ public class Main implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             isPaused = !isPaused;
 
-            if (isPaused){
+            if (isPaused) {
                 ConnectDB.updateUserScoreInDatabase(playerScore);
                 Gdx.input.setInputProcessor(pauseStage);
-            }else {
+            } else {
                 Gdx.input.setInputProcessor(null);
             }
         }
@@ -147,7 +153,7 @@ public class Main implements Screen {
             //Mettre la logic et les draw ici
             logic();
             draw();
-        }else {
+        } else {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             pauseStage.act(delta);
             pauseStage.draw();
@@ -157,7 +163,7 @@ public class Main implements Screen {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
-       pauseStage.getViewport().update(width,height, true);
+        pauseStage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -177,15 +183,15 @@ public class Main implements Screen {
 
     @Override
     public void dispose() {
-      pauseStage.dispose();
-      batch.dispose();
-      atlas.dispose();
-      music.dispose();
-      shootingArrow.dispose();
-      skeletonDying.dispose();
-      uiSKin.dispose();
-      bitmapFont.dispose();
-      bgTexture.dispose();
+        pauseStage.dispose();
+        batch.dispose();
+        atlas.dispose();
+        music.dispose();
+        shootingArrow.dispose();
+        skeletonDying.dispose();
+        uiSKin.dispose();
+        bitmapFont.dispose();
+        bgTexture.dispose();
     }
 
     private void drawSkeleton(float deltaTime) {
@@ -209,6 +215,15 @@ public class Main implements Screen {
             skelRectangle.setPosition(skeletons.get(i).getSprite().getX(), skeletons.get(i).getPositionY());
             skeletons.get(i).setSkeletonRectangle(skelRectangle);
 
+            if (skeletons.get(i).getPositionX() == 0) {
+                System.out.println("dead");
+                button.setVisible(false);
+                musicSlider.setVisible(false);
+                musicLabel.setText("You died Nub");
+                musicLabel.setPosition(350, 400);
+                exitButton.setPosition(325, 50);
+                isPaused = true;
+            }
         }
     }
 
@@ -225,7 +240,7 @@ public class Main implements Screen {
 
         batch.begin();
         input();
-        batch.draw(bgTexture,0,0,viewport.getWorldWidth(),viewport.getWorldHeight());
+        batch.draw(bgTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
 
         for (int i = 0; i < arrows.size; i++) {
             arrows.get(i).getArrowSprite().draw(batch);
@@ -239,7 +254,7 @@ public class Main implements Screen {
         batch.end();
         batch.setProjectionMatrix(uiCamera.combined);
         batch.begin();
-        bitmapFont.setColor(1.0f,1.0f,1.0f,1.0f);
+        bitmapFont.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         String x = "score: " + playerScore;
         bitmapFont.getData().setScale(1f);
         bitmapFont.draw(batch, x, 300, 440);
@@ -314,48 +329,76 @@ public class Main implements Screen {
             }
 
         }
-   }
-   private void AudioSetUp(){
-       music = Gdx.audio.newMusic(Gdx.files.internal("The Heavy - Short Change Hero.mp3"));
-       shootingArrow = Gdx.audio.newSound(Gdx.files.internal("arrow.mp3"));
-       skeletonDying = Gdx.audio.newSound(Gdx.files.internal("skeleton.mp3"));
-       music.setLooping(true);
-       music.setVolume(.1f);
-       shootingArrow.setVolume(1,.2f);
+    }
 
-       skeletonDying.setVolume(1,.2f);
-       music.play();
-   }
-   private void pauseMenu(){
-      pauseStage = new Stage(new FitViewport(800, 600));
-      Gdx.input.setInputProcessor(pauseStage);
+    private void AudioSetUp() {
+        music = Gdx.audio.newMusic(Gdx.files.internal("The Heavy - Short Change Hero.mp3"));
+        shootingArrow = Gdx.audio.newSound(Gdx.files.internal("arrow.mp3"));
+        skeletonDying = Gdx.audio.newSound(Gdx.files.internal("skeleton.mp3"));
+        music.setLooping(true);
+        music.setVolume(.1f);
+        shootingArrow.setVolume(1, .2f);
 
-       uiSKin = new Skin(Gdx.files.internal("uiskin.json"));
-       musicLabel = new Label("Music Volume", uiSKin);
-       musicLabel.setPosition(200, 220);
+        skeletonDying.setVolume(1, .2f);
+        music.play();
+    }
 
-       musicSlider = new Slider(0f, 1f, 0.1f, false, uiSKin);
+    private void pauseMenu() {
+        pauseStage = new Stage(new FitViewport(800, 600));
+        Gdx.input.setInputProcessor(pauseStage);
 
+        uiSKin = new Skin(Gdx.files.internal("uiskin.json"));
+        musicLabel = new Label("Music Volume", uiSKin);
+        musicLabel.setPosition(200, 220);
 
-       musicSlider.setPosition(200, 150);
-       musicSlider.setSize(300, 40);
+        musicSlider = new Slider(0f, 1f, 0.1f, false, uiSKin);
 
 
-       musicSlider.addListener(new ChangeListener() {
-           @Override
-           public void changed(ChangeEvent event, Actor actor) {
-               System.out.println("Slider value: " + musicSlider.getValue());
-               music.setVolume(musicSlider.getValue());
-               shootingArrow.setVolume(1,musicSlider.getValue()+0.1f);
+        musicSlider.setPosition(200, 150);
+        musicSlider.setSize(300, 40);
 
-               skeletonDying.setVolume(1,musicSlider.getValue()+0.1f);
-           }
-       });
-       pauseStage.addActor(musicLabel);
-       pauseStage.addActor(musicSlider);
 
-  }
+        button = new TextButton("Save", uiSKin);
+        button.setPosition(200, 75);
+        button.setSize(150, 50);
 
+
+        exitButton = new TextButton("Exit", uiSKin);
+        exitButton.setPosition(400, 75);
+        exitButton.setSize(150, 50);
+
+        musicSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("Slider value: " + musicSlider.getValue());
+                music.setVolume(musicSlider.getValue());
+                shootingArrow.setVolume(1, musicSlider.getValue() + 0.1f);
+
+                skeletonDying.setVolume(1, musicSlider.getValue() + 0.1f);
+            }
+        });
+
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ConnectDB.updateUserScoreInDatabase(playerScore);
+            }
+        });
+
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+                System.exit(0);
+            }
+        });
+
+
+        pauseStage.addActor(musicLabel);
+        pauseStage.addActor(musicSlider);
+        pauseStage.addActor(button);
+        pauseStage.addActor(exitButton);
+    }
 
 
 }
