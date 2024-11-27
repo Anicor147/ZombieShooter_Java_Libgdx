@@ -294,6 +294,7 @@ public class Main implements Screen {
                     try {
                         if (arrow.getArrowRectangle().overlaps(ennemies.getSkeletonRectangle())) {
                             playerScore += ennemies.getScore();
+                            if (playerScore > 30) playerScore = 30;
                             iterator.remove();
                             System.out.println("Kill");
                             arrowIter.remove();
