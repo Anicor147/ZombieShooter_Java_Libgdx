@@ -1,4 +1,7 @@
 # ZombieShooter
+Anthony Niculescu-Cornejo
+Kevin Durocher
+
 
 Monter le personnage avec W
 Descendre le personnage avec S
