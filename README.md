@@ -19,5 +19,5 @@
 
 <h3>What I've learned during this project</h3>
 <ol>
-  <li>How to transfer my skills from one programming language to another/li>
+  <li>How to transfer my skills from one programming language to another</li>
 </ol>
