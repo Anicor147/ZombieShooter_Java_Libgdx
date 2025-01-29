@@ -13,11 +13,11 @@
 <h3>What I've done in this project</h3>
 <ol>
   <li>Everything was done using Java and libGDX</li>
-  <li>Using php to create a database to save player credentials and scores</li>
-  <li>Creating a login screen and saving the login credentials in a database</li>
+  <li>Used PHP to create a database to save player credentials and scores</li>
+  <li>Created a login screen and saved the login credentials in a database</li>
 </ol>
 
 <h3>What I've learned during this project</h3>
 <ol>
-  <li>How to transfer my skills in other programming language to a new one</li>
+  <li>How to transfer my skills from one programming language to another/li>
 </ol>
