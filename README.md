@@ -15,9 +15,11 @@
   <li>Everything was done using Java and libGDX</li>
   <li>Used PHP to create a database to save player credentials and scores</li>
   <li>Created a login screen and saved the login credentials in a database</li>
+  <li>Designed and implemented UI element, such as menu and buttons</li>
 </ol>
 
 <h3>What I've learned during this project</h3>
 <ol>
   <li>How to transfer my skills from one programming language to another</li>
+  <li>The process of integrating Java with PHP and MySQL to ensure a working database connection</li>
 </ol>
